@@ -10395,4 +10395,338 @@ task.spawn(function()
 	if not AutoLeave.Enabled then 
 		AutoLeave.ToggleButton(false)
 	end
+end)																																																																																																																																																																																																																																				
+
+runcode(function()
+    local KillFeed = {["Enabled"] = false}
+    local container
+
+    KillFeed = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "KillFeed",
+        ["HoverText"] = "Destroys the KillFeed",
+        ["Function"] = function(callback)
+            if callback then
+                task.spawn(function()
+                    if container == nil then
+                        repeat
+                            local suc, res = pcall(function() return lplr.PlayerGui.KillFeedGui.KillFeedContainer end)
+                            if suc then
+                                container = res
+                            end
+                            task.wait()
+                        until container ~= nil
+                    end
+                    container.Visible = false
+                end)
+            else
+                if container then
+                    container.Visible = true
+                end
+            end
+        end
+    })
 end)
+
+runcode(function()
+    local CFrameHighJump = {["Enabled"] = false}
+    CFrameHighJump = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "CFrameHighJump",
+        ["HoverText"] = "DISABLE GRAVITY",
+        ["Function"] = function(callback)
+            if callback then
+                if entity.isAlive then
+                    workspace.Gravity = 0
+                    entity.character.HumanoidRootPart.CFrame -= Vector3.new(0, 2, 0)
+                    task.spawn(function()
+                        repeat
+                            if not CFrameHighJump["Enabled"] then break end
+                            if not entity.isAlive then break end
+                            workspace.Gravity = 0
+                            entity.character.HumanoidRootPart.CFrame += Vector3.new(0, 5, 0)
+                            task.wait(0.05)
+                            entity.character.HumanoidRootPart.CFrame += Vector3.new(0, 3, 0)
+                        until not CFrameHighJump["Enabled"]
+                    end)
+                end
+            else
+                workspace.Gravity = 196.2
+            end
+        end
+    })
+end)
+
+runcode(function()
+    local NameHider = {["Enabled"] = true}
+    local fakeplr = {["Name"] = "Chase", ["UserId"] = "239702688"}
+    local otherfakeplayers = {["Name"] = "Nigger", ["UserId"] = "1"}
+
+    local function plrthing(obj, property)
+        for i,v in pairs(game:GetService("Players"):GetChildren()) do
+            if v ~= lplr then
+                obj[property] = obj[property]:gsub(v.Name, otherfakeplayers["Name"])
+                obj[property] = obj[property]:gsub(v.DisplayName, otherfakeplayers["Name"])
+                obj[property] = obj[property]:gsub(v.UserId, otherfakeplayers["UserId"])
+            else
+                obj[property] = obj[property]:gsub(v.Name, fakeplr["Name"])
+                obj[property] = obj[property]:gsub(v.DisplayName, fakeplr["Name"])
+                obj[property] = obj[property]:gsub(v.UserId, fakeplr["UserId"])
+            end
+        end
+    end
+
+    local function newobj(v)
+        if v:IsA("TextLabel") or v:IsA("TextButton") then
+            plrthing(v, "Text")
+            v:GetPropertyChangedSignal("Text"):connect(function()
+                plrthing(v, "Text")
+            end)
+        end
+        if v:IsA("ImageLabel") then
+            plrthing(v, "Image")
+            v:GetPropertyChangedSignal("Image"):connect(function()
+                plrthing(v, "Image")
+            end)
+        end
+    end
+
+    NameHider = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "NameHider",
+        ["HoverText"] = "Disable TargetHud (And Don't Use Nametags)",
+        ["Function"] = function(callback)
+            if callback then
+                for i,v in pairs(game:GetDescendants()) do
+                    newobj(v)
+                end
+                game.DescendantAdded:connect(newobj, obj)
+            else
+                createwarning("Idk Who", "Join New match to show your and other nametags?", 3) -- pissware :scream:
+            end
+        end
+    })
+end)
+
+local Messages = {
+    "😍Fuck",
+    "DevineV4 Skid?!?!",
+    "Inf",
+    "DevineV4 On Top?!?!",
+    "Sex😍"
+}
+local old
+local FunnyIndicator = {Enabled = false}
+FunnyIndicator =
+    GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton(
+    {
+        Name = "Damage Indicators",
+        Function = function(Callback)
+            FunnyIndicator.Enabled = Callback
+            if FunnyIndicator.Enabled then
+                old = debug.getupvalue(bedwars.DamageIndicator, 10)["Create"]
+                debug.setupvalue(
+                    bedwars.DamageIndicator,
+                    10,
+                    {
+                        Create = function(self, obj, ...)
+                            spawn(
+                                function()
+                                    pcall(
+                                        function()
+                                            obj.Parent.Text = Messages[math.random(1, #Messages)]
+                                            obj.Parent.TextColor3 = Color3.fromHSV(tick() % 5 / 5, 1, 1)
+                                        end
+                                    )
+                                end
+                            )
+                            return game:GetService("TweenService"):Create(obj, ...)
+                        end
+                    }
+                )
+            else
+                debug.setupvalue(
+                    bedwars.DamageIndicator,
+                    10,
+                    {
+                        Create = old
+                    }
+                )
+                old = nil
+            end
+        end
+    }
+)
+
+runcode(function()
+	local PartyPopperFunny = {Enabled = false}
+	PartyPopperFunny = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+		Name = "PartyPopperSpammer",
+		Function = function(callback)
+			if callback then 
+				task.spawn(function()	
+					repeat task.wait(0.3) 
+					repstorage["events-@easy-games/game-core:shared/game-core-networking@getEvents.Events"].useAbility:FireServer("PARTY_POPPER")
+					until (not PartyPopperFunny.Enabled)
+				end)
+			end
+		end
+	})
+end)
+
+runcode(function()
+    local deb
+    local con
+    local client = require(game:GetService("ReplicatedStorage"):WaitForChild("TS"):WaitForChild("remotes")).default.Client
+    local lplr = game:GetService("Players").LocalPlayer
+
+    function fetchBed()
+        local selectedBed
+        for _, bed in next, workspace:GetChildren() do
+            if bed.Name == "bed" and not selectedBed then
+                local covers = bed:WaitForChild("Covers")
+                
+                if lplr.TeamColor ~= covers.BrickColor then
+                    selectedBed = bed
+                end
+            end
+        end
+        return (selectedBed)
+    end
+
+    deb = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+        Name = "BedTP", 
+        Function = function(callback)
+            if callback then
+            GuiLibrary["MainGui"].ScaledGui.ClickGui.Version.Text = "Ape v6"
+             GuiLibrary["MainGui"].ScaledGui.ClickGui.MainWindow.TextLabel.Text = "Ape v6"
+             GuiLibrary["MainGui"].ScaledGui.ClickGui.Version.Version.Text = "Ape v6"
+              GuiLibrary["MainGui"].ScaledGui.ClickGui.Version.Position = UDim2.new(1, -175 - 20, 1, -25)
+               warnnotify("BedTP","Enabled.", 5)
+                lplr = game:GetService("Players").LocalPlayer
+                chr = lplr.Character
+
+                if lplr and chr then
+                    local bed = fetchBed()
+                    local tppos2 = bed.Position + Vector3.new(0, 10, 0)
+                    local hum = chr:FindFirstChildWhichIsA("Humanoid")
+                    con = lplr.CharacterAdded:Connect(function(chr)
+                        con:Disconnect()
+                        task.wait(.5)
+                        local root = chr:WaitForChild("HumanoidRootPart")
+                        local check = (lplr:GetAttribute("LastTeleported") - lplr:GetAttribute("SpawnTime")) < 1
+                        con = game:GetService("RunService").Heartbeat:Connect(function(dt)
+                            local dist = ((check and 700 or 1200) * dt)
+                                        if (tppos2 - root.CFrame.p).Magnitude > dist then
+                                            root.CFrame = root.CFrame + (tppos2 - root.CFrame.p).Unit * dist
+                                            local yes = (tppos2 - root.CFrame.p).Unit * 20
+                                            root.Velocity = Vector3.new(yes.X, root.Velocity.Y, yes.Z)
+                                        else
+                                            root.CFrame = root.CFrame + (tppos2 - root.CFrame.p)
+                                        end
+                        end)
+
+                        repeat
+                            task.wait()
+                        until (tppos2 - root.CFrame.p).Magnitude < 10
+
+                        con:Disconnect()
+                    end)
+
+                    for _ = 1, 10, 1 do
+                        hum:ChangeState(Enum.HumanoidStateType.Dead)
+                        hum.Health = 0
+                    end
+                    -- client:Get("ResetCharacter"):SendToServer()
+                end
+                deb.ToggleButton(false)
+            end
+        end,
+        HoverText = "Bed TP or teleportation to a random bed",
+    })
+end)
+
+runcode(function()
+		local FPSUnlocker = {["Enabled"] = false}
+		FPSUnlocker = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+			["Name"] = "FPSUnlocker",
+			["HoverText"] = "unlocks fps to get more fps",
+			   ["Function"] = function(Callback)
+					if Callback then
+	                                   setfpscap(10000)
+                                   else
+                                           setfpscap(9999)
+					end
+				end
+		})
+	end)
+	
+runcode(function()
+	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "InfiniteJump",
+		Function = function(callback)
+			if callback then
+				local infiniteJumpEnabled = true
+				game:GetService("UserInputService").JumpRequest:Connect(function()
+					if infiniteJumpEnabled then
+						local humanoid = game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+						if humanoid then
+							humanoid:ChangeState("Jumping")
+						end
+					end
+				end)
+			else
+				infiniteJumpEnabled = false
+			end
+		end
+	})
+end)
+
+runFunction(function()
+    local chattag = {Enabled = false}
+    chattag = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
+        Name = "chat tag",
+        Function = function(callback)
+            if callback then 
+                task.spawn(function()
+                    local textChatService = game:GetService("TextChatService")
+                        local playersService = game:GetService("Players")
+                            textChatService.OnIncomingMessage = function(message)
+                                local properties = Instance.new("TextChatMessageProperties")
+                                    if message.TextSource then
+                                    local player = playersService:GetPlayerByUserId(message.TextSource.UserId)
+                                        if player and player.UserId == playersService.LocalPlayer.UserId then
+                                    properties.PrefixText = "<font color='#B300FF'>[AC Mod]</font> " .. message.PrefixText
+                                end
+                            end
+                        return properties
+                    end
+                end)
+            end
+        end,
+        HoverText = "chat tag"
+    })
+end)
+
+runFunction(function()
+local vclip = {Enabled = false}
+vclip = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+Name = "Vclip",
+Function = function(callback)
+if callback then
+  if entityLibrary.isAlive then
+	entityLibrary.character.HumanoidRootPart.CFrame += Vector3.new(0, -7, 0)
+	 vclip["ToggleButton"](false)
+  end
+end
+end
+})
+end)
+
+local function createwarning(title, text, delay)
+	local suc, res = pcall(function()
+		local frame = GuiLibrary["CreateNotification"](title, text, delay, "assets/WarningNotification.png")
+		frame.Frame.Frame.ImageColor3 = Color3.fromRGB(201, 126, 14)
+		return frame
+	end)
+	return (suc and res)
+end
+
+createwarning("DevineV4", "DevineV4 has Loaded!", 5)																																																																																																																																																																																																																																									
