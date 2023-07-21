@@ -2212,7 +2212,7 @@ do
 	end)
 	local textlabel = Instance.new("TextLabel")
 	textlabel.Size = UDim2.new(1, 0, 0, 36)
-	textlabel.Text = "A new discord has been created, click the icon to join."
+	textlabel.Text = "This config is made by justanotheretard#0000"
 	textlabel.BackgroundTransparency = 1
 	textlabel.ZIndex = 10
 	textlabel.TextStrokeTransparency = 0
