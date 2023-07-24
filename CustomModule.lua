@@ -10505,56 +10505,6 @@ runcode(function()
     })
 end)
 
-local Messages = {
-    "😍Fuck",
-    "DevineV4 Skid?!?!",
-    "Inf",
-    "DevineV4 On Top?!?!",
-    "Sex😍"
-}
-local old
-local FunnyIndicator = {Enabled = false}
-FunnyIndicator =
-    GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton(
-    {
-        Name = "Damage Indicators",
-        Function = function(Callback)
-            FunnyIndicator.Enabled = Callback
-            if FunnyIndicator.Enabled then
-                old = debug.getupvalue(bedwars.DamageIndicator, 10)["Create"]
-                debug.setupvalue(
-                    bedwars.DamageIndicator,
-                    10,
-                    {
-                        Create = function(self, obj, ...)
-                            spawn(
-                                function()
-                                    pcall(
-                                        function()
-                                            obj.Parent.Text = Messages[math.random(1, #Messages)]
-                                            obj.Parent.TextColor3 = Color3.fromHSV(tick() % 5 / 5, 1, 1)
-                                        end
-                                    )
-                                end
-                            )
-                            return game:GetService("TweenService"):Create(obj, ...)
-                        end
-                    }
-                )
-            else
-                debug.setupvalue(
-                    bedwars.DamageIndicator,
-                    10,
-                    {
-                        Create = old
-                    }
-                )
-                old = nil
-            end
-        end
-    }
-)
-
 runcode(function()
 	local PartyPopperFunny = {Enabled = false}
 	PartyPopperFunny = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
